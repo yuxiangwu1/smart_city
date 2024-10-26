@@ -25,9 +25,9 @@ jobs:
     - name: Pull Code on Server
       run: |
         ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-        "cd ~/your_project && git pull origin main || git clone https://github.com/your_username/your_repo.git ."
+        "cd ~/smart_city && git pull origin main || git clone https://github.com/your_username/your_repo.git ."
 
     - name: Run Project Command
       run: |
         ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-        "cd ~/your_project && ./start.sh"
+        "cd ~/smart_city && ./start.sh"
