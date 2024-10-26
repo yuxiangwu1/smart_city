@@ -1,0 +1,49 @@
+<!-- templates/error.html -->
+{% extends "base.html" %}
+
+{% block title %}Error - SmartCity{% endblock %}
+
+{% block additional_styles %}
+.error-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.error-container h1 {
+    color: #e74c3c;
+    margin-bottom: 20px;
+}
+
+.error-container p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.back-link {
+    display: inline-block;
+    color: #2980b9;
+    text-decoration: none;
+    padding: 10px 20px;
+    border: 1px solid #2980b9;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.back-link:hover {
+    background: #2980b9;
+    color: white;
+}
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <h1>An Error Occurred</h1>
+    <p>{{ message }}</p>
+    <a href="/" class="back-link">Back to Home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Smart Travel Planning - SmartCity{% endblock %}
+
+{% block additional_styles %}
+.hero {
+    text-align: center;
+    padding: 60px 0;
+}
+
+.hero h1 {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    color: #666;
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+
+.search-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-form input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 1em;
+}
+
+.search-button {
+    background-color: #4285f4;
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.1em;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.feature-card i {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Smart Travel Planning</h1>
+    <p>Explore your perfect journey, let AI customize a unique travel plan for you</p>
+
+    <form class="search-form" action="/generate_itinerary" method="POST">
+        <input type="text" name="destination" placeholder="Try: Queenstown, Auckland, Rotorua, Milford Sound..." required>
+        <input type="date" name="start_date" id="start_date" required>
+        <input type="text" name="preferences" placeholder="e.g. Hiking, Wine tasting, Hot springs, Cultural experiences, Adventure sports...">
+        <button type="submit" class="search-button">Generate Travel Plan</button>
+    </form>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <i>🎯</i>
+            <h3>Personalized Customization</h3>
+            <p>Tailor the perfect itinerary based on your preferences</p>
+        </div>
+        <div class="feature-card">
+            <i>🌤</i>
+            <h3>Real-time Weather</h3>
+            <p>Intelligently adjust the itinerary considering weather factors</p>
+        </div>
+        <div class="feature-card">
+            <i>📍</i>
+            <h3>Local Recommendations</h3>
+            <p>Get the latest and best travel experience recommendations</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 设置默认日期为7天后
+    window.onload = function() {
+        var date = new Date();
+        date.setDate(date.getDate() + 7);
+
+        // 格式化日期为YYYY-MM-DD
+        var defaultDate = date.toISOString().split('T')[0];
+        document.getElementById('start_date').value = defaultDate;
+
+        // 设置最小日期为今天
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementById('start_date').min = today;
+    }
+</script>
+{% endblock %}

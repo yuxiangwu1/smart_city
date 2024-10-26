@@ -1,0 +1,190 @@
+<!-- templates/translator.html -->
+{% extends "base.html" %}
+
+{% block title %}Translation - SmartCity{% endblock %}
+
+{% block additional_styles %}
+.translator-container {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.translator-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.translator-header h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.translator-header p {
+    color: #666;
+}
+
+.translation-area {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;  /* Increase spacing */
+    margin-top: 20px;
+    min-height: 400px;  /* Ensure minimum height */
+}
+
+.input-area, .output-area {
+    position: relative;
+    background: white;
+    padding: 20px;  /* Add padding */
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.area-label {
+    font-size: 1em;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+textarea {
+    width: 100%;
+    height: 300px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: none;
+    font-size: 16px;
+    line-height: 1.5;
+    transition: border-color 0.3s;
+    background: #fff;  /* Ensure input background is white */
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52,152,219,0.1);
+}
+
+.output-area textarea {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.loading .loading-indicator {
+    display: block;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: rotate 1s linear infinite;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .translation-area {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .translator-container {
+        padding: 20px;
+    }
+
+    textarea {
+        height: 200px;
+    }
+}
+{% endblock %}
+
+{% block content %}
+<div class="translator-container">
+    <div class="translator-header">
+        <h1>Travel Translation</h1>
+        <p>Professional multilingual travel translation service, supporting real-time translation</p>
+    </div>
+
+    <div class="translation-area">
+        <div class="input-area">
+            <div class="area-label">Input Text</div>
+            <textarea
+                id="input-text"
+                placeholder="Please enter the text to be translated&#10;Supports multilingual input&#10;Translation results will be displayed in real-time on the right"
+            ></textarea>
+        </div>
+        <div class="output-area">
+            <div class="area-label">English Translation</div>
+            <textarea
+                id="output-text"
+                readonly
+                placeholder="Translation results will be displayed here"
+            ></textarea>
+            <div class="loading-indicator">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const inputText = document.getElementById('input-text');
+const outputText = document.getElementById('output-text');
+const outputArea = document.querySelector('.output-area');
+
+let translateTimeout;
+
+inputText.addEventListener('input', function() {
+    clearTimeout(translateTimeout);
+    translateTimeout = setTimeout(translateText, 500);
+});
+
+async function translateText() {
+    const text = inputText.value.trim();
+    if (!text) {
+        outputText.value = '';
+        return;
+    }
+
+    try {
+        outputArea.classList.add('loading');
+        const response = await fetch('/translate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ text: text })
+        });
+
+        const data = await response.json();
+        outputText.value = data.translated;
+    } catch (error) {
+        outputText.value = 'Translation error, please try again later';
+        console.error('Translation error:', error);
+    } finally {
+        outputArea.classList.remove('loading');
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,163 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SmartCity{% endblock %}</title>
+    <style>
+        /* Global styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* Navbar styles */
+        .nav {
+            background-color: #fff;
+            padding: 15px 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .nav-brand i {
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            padding: 5px 10px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2980b9;
+        }
+
+        .nav-auth {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-auth a {
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .nav-auth .register {
+            color: #666;
+        }
+
+        .nav-auth .register:hover {
+            background-color: #f8f9fa;
+        }
+
+        .nav-auth .login {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        .nav-auth .login:hover {
+            background-color: #3498db;
+        }
+
+        /* Main content area */
+        .main-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            min-height: calc(100vh - 200px); /* Ensure minimum height for content area */
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: #fff;
+            padding: 40px;
+            margin-top: 60px;
+            text-align: center;
+            color: #666;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-auth {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        {% block additional_styles %}{% endblock %}
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="nav">
+        <a href="/" class="nav-brand">
+            <i>🏠</i>
+            SmartCity
+        </a>
+        <div class="nav-links">
+            <a href="/trip-planner">Trip Planner</a>
+            <a href="/translator">Translator</a>
+            <a href="/attractions">Attractions</a>
+        </div>
+        <div class="nav-auth">
+            {% if session.user_id %}
+                <a href="/logout" class="register">Logout</a>
+            {% else %}
+            {% endif %}
+                <a href="/register" class="register">Register</a>
+                <a href="/login" class="login">Login</a>
+        </div>
+    </nav>
+
+    <!-- Main content area -->
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 SmartCity. All rights reserved.</p>
+        <p>Smart Travel Planning System - Creating the Perfect Trip for You</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
