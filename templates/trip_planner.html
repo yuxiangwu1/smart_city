@@ -1,0 +1,41 @@
+<!-- templates/trip_planner.html -->
+{% extends "base.html" %}
+
+{% block title %}Trip Planner - SmartCity{% endblock %}
+
+{% block additional_styles %}
+.planner-container {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.no-itinerary {
+    padding: 40px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.create-new {
+    display: inline-block;
+    background: #2980b9;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 20px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="planner-container">
+    <h1>Trip Planner</h1>
+    <div class="no-itinerary">
+        <p>You haven't created any itineraries yet</p>
+        <a href="/" class="create-new">Create New Itinerary</a>
+    </div>
+</div>
+{% endblock %}

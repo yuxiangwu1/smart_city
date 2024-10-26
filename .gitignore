@@ -1,0 +1,5 @@
+#virtual environment
+/travel_ai
+
+#config files
+.env

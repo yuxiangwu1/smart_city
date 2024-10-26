@@ -1,0 +1,9 @@
+flask
+langchain
+openai
+pdfkit
+tiktoken
+faiss-cpu
+markdown2
+python-dotenv
+jsonlines

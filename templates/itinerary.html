@@ -1,0 +1,196 @@
+<!-- templates/itinerary.html -->
+{% extends "base.html" %}
+
+{% block title %}Your Personalized Travel Plan - SmartCity{% endblock %}
+
+{% block additional_styles %}
+.itinerary-container {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.itinerary-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.itinerary-header h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.itinerary-header p {
+    color: #666;
+}
+
+.day-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.day-title {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.activity {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+.activity-time {
+    color: #2980b9;
+    font-weight: bold;
+}
+
+.adjustment-form {
+    margin-top: 40px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.adjustment-form textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    resize: vertical;
+}
+
+.adjustment-form button {
+    background: #2980b9;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-button-container {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.save-btn {
+    background: #27ae60;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.share-url {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background: #f1f9f1;
+    border-radius: 4px;
+    color: #27ae60;
+}
+{% endblock %}
+
+{% block content %}
+<div class="itinerary-container">
+    <div class="itinerary-header">
+        <h1>Your Personalized Travel Plan</h1>
+        <p>The perfect itinerary tailored to your preferences</p>
+    </div>
+
+    {% if session.user_id %}
+    <div class="save-button-container">
+        <button onclick="saveItinerary()" class="save-btn">Save Itinerary</button>
+        <div id="shareUrl" class="share-url"></div>
+    </div>
+    {% endif %}
+
+    <div id="itineraryContent"></div>
+
+    <div class="adjustment-form">
+        <h3>Need to Adjust the Itinerary?</h3>
+        <form action="/adjust_itinerary" method="POST">
+            <textarea name="adjustment" rows="4" placeholder="Enter your adjustment suggestions"></textarea>
+            <button type="submit">Submit Adjustment Suggestions</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+try {
+    const itineraryData = JSON.parse('{{ itinerary|tojson|safe }}');
+    const container = document.getElementById('itineraryContent');
+
+    // Add title and summary
+    container.innerHTML = `
+        <h2 style="color: #2c3e50; margin-bottom: 20px;">${itineraryData.title}</h2>
+        <p style="color: #666; margin-bottom: 30px;">${itineraryData.summary}</p>
+    `;
+
+    // Add daily itinerary
+    itineraryData.itinerary.forEach(day => {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'day-card';
+
+        const activitiesHTML = day.activities.map(activity => `
+            <div class="activity">
+                <div class="activity-time">${activity.time}</div>
+                <div class="activity-description">${activity.description}</div>
+                <div class="activity-location">📍 ${activity.location}</div>
+                ${activity.notes ? `<div class="activity-notes">💡 ${activity.notes}</div>` : ''}
+            </div>
+        `).join('');
+
+        dayElement.innerHTML = `
+            <div class="day-title">
+                ${day.day} (${day.date})
+            </div>
+            ${activitiesHTML}
+        `;
+
+        container.appendChild(dayElement);
+    });
+} catch (error) {
+    console.error('Error parsing or rendering itinerary:', error);
+    document.getElementById('itineraryContent').innerHTML = `
+        <div style="color: #721c24; background-color: #f8d7da; padding: 20px; border-radius: 4px;">
+            Sorry, there was an error displaying the itinerary. Please try again.
+        </div>
+    `;
+}
+
+async function saveItinerary() {
+    try {
+        const response = await fetch('/save_itinerary', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+        if (data.share_url) {
+            const shareUrlDiv = document.getElementById('shareUrl');
+            shareUrlDiv.style.display = 'block';
+            shareUrlDiv.innerHTML = `Share link: <a href="${data.share_url}" target="_blank">${data.share_url}</a>`;
+        } else {
+            alert('Save failed: ' + data.error);
+        }
+    } catch (error) {
+        alert('Save failed, please try again later');
+    }
+}
+</script>
+{% endblock %}

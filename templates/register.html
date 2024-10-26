@@ -1,0 +1,116 @@
+<!-- templates/register.html -->
+{% extends "base.html" %}
+
+{% block title %}Register - SmartCity{% endblock %}
+
+{% block additional_styles %}
+.auth-container {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-header h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.form-group input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52,152,219,0.1);
+}
+
+.submit-btn {
+    background: #2980b9;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background: #3498db;
+}
+
+.error-message {
+    color: #e74c3c;
+    padding: 12px;
+    background: #fdf0ef;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-links a {
+    color: #2980b9;
+    text-decoration: none;
+}
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-header">
+        <h1>Register Account</h1>
+    </div>
+
+    {% if error %}
+    <div class="error-message">{{ error }}</div>
+    {% endif %}
+
+    <form class="auth-form" method="POST">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="submit-btn">Register</button>
+    </form>
+
+    <div class="auth-links">
+        <p>Already have an account? <a href="/login">Login now</a></p>
+    </div>
+</div>
+{% endblock %}
