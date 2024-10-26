@@ -268,7 +268,7 @@ def view_itinerary(itinerary_id):
                     for itinerary in user['saved_itineraries']:
                         if itinerary['id'] == itinerary_id:
                             return render_template('itinerary.html',
-                                                   itinerary=json.dumps(itinerary['data']))
+                                                   itinerary=itinerary['data'])
     except FileNotFoundError:
         pass
 
