@@ -3,7 +3,7 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main  # when push code to main branch
+      - main  # 每次推送到 main 分支时触发
 
 jobs:
   deploy:
@@ -12,6 +12,9 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
+
+    - name: Create .ssh directory
+      run: mkdir -p ~/.ssh
 
     - name: Setup SSH Key
       run: |
@@ -22,9 +25,9 @@ jobs:
     - name: Pull Code on Server
       run: |
         ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-        "cd ~/smart_city && git pull origin main || git clone https://github.com/yuxiangwu1/smart_city.git."
-        
+        "cd ~/your_project && git pull origin main || git clone https://github.com/your_username/your_repo.git ."
+
     - name: Run Project Command
       run: |
         ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-        "cd ~/smart_city && ./start.sh"
+        "cd ~/your_project && ./start.sh"
